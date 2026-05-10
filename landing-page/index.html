@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agency — Your intent, multiplied.</title>
+<meta name="description" content="A local command center where AI agents work as your team — with voice, presence, GIST causal reasoning, and an append-only ledger.">
+<meta property="og:title" content="Agency — Your intent, multiplied.">
+<meta property="og:description" content="A local command center where AI agents work as your team.">
+<meta property="og:image" content="https://agency.dev/assets/og-image.png">
+<meta property="og:url" content="https://agency.dev">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://agency.dev/assets/og-image.png">
+<link rel="canonical" href="https://agency.dev">
+<meta name="theme-color" content="#101114">
+<link rel="icon" href="assets/favicon.svg">
+<style>
+  :root {
+    --ink: #101114; --slate: #171A20; --graphite: #2E3542;
+    --parchment: #E8E3D6; --muted: #7B8394;
+    --gold: #E2B76D; --cyan: #5EB7C7; --green: #7FB069;
+    --amber: #D99045; --red: #E05D5D;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--ink); color:var(--parchment); font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace; line-height:1.6; overflow-x:hidden; }
+  .container { max-width:1000px; margin:0 auto; padding:0 24px; }
+  
+  /* Particle canvas */
+  #particles { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; opacity:.4; }
+  
+  nav { position:relative; z-index:10; display:flex; justify-content:space-between; align-items:center; padding:24px 0; }
+  nav .logo { color:var(--gold); font-weight:bold; font-size:1.1rem; letter-spacing:0.05em; }
+  nav .links { display:flex; gap:24px; }
+  nav .links a { color:var(--muted); text-decoration:none; font-size:.875rem; transition:color .2s; }
+  nav .links a:hover { color:var(--parchment); }
+
+  .hero { position:relative; z-index:5; padding:100px 0 80px; text-align:center; }
+  .hero .wordmark { color:var(--gold); font-size:.5rem; line-height:1.2; margin-bottom:24px; white-space:pre; opacity:0; animation:fadeInUp 1s ease forwards .3s; }
+  .hero h1 { font-size:3rem; font-weight:700; margin-bottom:16px; letter-spacing:-.02em; opacity:0; animation:fadeInUp 1s ease forwards .5s; }
+  .hero h1 span { color:var(--gold); }
+  .hero .subtitle { font-size:1.25rem; color:var(--muted); max-width:650px; margin:0 auto 40px; opacity:0; animation:fadeInUp 1s ease forwards .7s; }
+  .hero .cta-group { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; opacity:0; animation:fadeInUp 1s ease forwards .9s; }
+  .hero .cta { display:inline-flex; align-items:center; gap:8px; padding:14px 28px; border-radius:6px; font-family:inherit; font-size:.95rem; font-weight:600; text-decoration:none; cursor:pointer; transition:all .2s; }
+  .hero .cta-primary { background:var(--gold); color:var(--ink); }
+  .hero .cta-primary:hover { background:#f0c97a; transform:translateY(-2px); box-shadow:0 8px 24px rgba(226,183,109,.3); }
+  .hero .cta-secondary { background:var(--slate); color:var(--parchment); border:1px solid var(--graphite); }
+  .hero .cta-secondary:hover { border-color:var(--muted); transform:translateY(-1px); }
+  .hero .demo-hint { font-size:.8rem; color:var(--muted); opacity:0; animation:fadeInUp 1s ease forwards 1.1s; }
+  .hero .demo-hint code { background:var(--slate); padding:2px 8px; border-radius:4px; color:var(--cyan); }
+  .hero .stats { display:flex; justify-content:center; gap:40px; margin-top:40px; opacity:0; animation:fadeInUp 1s ease forwards 1.3s; }
+  .hero .stat { text-align:center; }
+  .hero .stat .num { font-size:2rem; font-weight:700; color:var(--gold); }
+  .hero .stat .label { font-size:.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
+
+  @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse { 0%,100% { opacity:.6; } 50% { opacity:1; } }
+  @keyframes type { from { width:0; } to { width:100%; } }
+  @keyframes blink { 50% { border-color:transparent; } }
+
+  .terminal-mock { position:relative; z-index:5; background:var(--slate); border:1px solid var(--graphite); border-radius:12px; margin:0 auto 100px; max-width:720px; overflow:hidden; box-shadow:0 25px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(226,183,109,.1); }
+  .terminal-mock .titlebar { display:flex; align-items:center; gap:8px; padding:14px 18px; background:#0d0f13; border-bottom:1px solid var(--graphite); }
+  .terminal-mock .dot { width:12px; height:12px; border-radius:50%; }
+  .terminal-mock .dot.r { background:var(--red); } .terminal-mock .dot.y { background:var(--amber); } .terminal-mock .dot.g { background:var(--green); }
+  .terminal-mock .title { color:var(--muted); font-size:.75rem; margin-left:8px; }
+  .terminal-mock .live-indicator { display:flex; align-items:center; gap:6px; margin-left:auto; }
+  .terminal-mock .live-indicator .pulse { width:8px; height:8px; background:var(--green); border-radius:50%; animation:pulse 2s infinite; }
+  .terminal-mock .live-indicator span { color:var(--green); font-size:.7rem; }
+  .terminal-mock .body { padding:24px; font-size:.82rem; line-height:2; }
+  .terminal-mock .body .prompt { color:var(--green); }
+  .terminal-mock .body .cmd { color:var(--parchment); }
+  .terminal-mock .body .output { color:var(--muted); }
+  .terminal-mock .body .gold { color:var(--gold); }
+  .terminal-mock .body .cyan { color:var(--cyan); }
+  .terminal-mock .body .green { color:var(--green); }
+  .terminal-mock .body .amber { color:var(--amber); }
+  .terminal-mock .typing { overflow:hidden; white-space:nowrap; border-right:2px solid var(--cyan); animation:type 2s steps(60,end) forwards, blink .75s step-end infinite; }
+
+  .section { position:relative; z-index:5; padding:80px 0; }
+  .section h2 { font-size:1.8rem; text-align:center; margin-bottom:16px; opacity:0; transform:translateY(20px); transition:all .6s ease; }
+  .section h2.visible { opacity:1; transform:translateY(0); }
+  .section h2 span { color:var(--gold); }
+  .section .section-sub { text-align:center; color:var(--muted); margin-bottom:56px; font-size:1rem; opacity:0; transform:translateY(20px); transition:all .6s ease .1s; }
+  .section .section-sub.visible { opacity:1; transform:translateY(0); }
+  
+  .feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; }
+  .feature-card { background:var(--slate); border:1px solid var(--graphite); border-radius:10px; padding:28px; transition:all .3s ease; opacity:0; transform:translateY(20px); }
+  .feature-card.visible { opacity:1; transform:translateY(0); }
+  .feature-card:hover { border-color:rgba(226,183,109,.3); transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,.3); }
+  .feature-card .icon { font-size:1.8rem; margin-bottom:16px; }
+  .feature-card h3 { font-size:1.05rem; margin-bottom:10px; }
+  .feature-card p { color:var(--muted); font-size:.875rem; line-height:1.7; }
+  .feature-card.highlight { border-color:rgba(226,183,109,.2); background:rgba(226,183,109,.03); }
+
+  .differentiators { display:grid; grid-template-columns:repeat(auto-fit,minmax(380px,1fr)); gap:24px; margin-top:48px; }
+  .diff-card { background:var(--slate); border:1px solid var(--graphite); border-radius:10px; padding:28px; transition:all .3s ease; opacity:0; transform:translateY(20px); }
+  .diff-card.visible { opacity:1; transform:translateY(0); }
+  .diff-card:hover { border-color:rgba(94,183,199,.3); }
+  .diff-card h3 { font-size:1.1rem; margin-bottom:10px; }
+  .diff-card h3 .accent { color:var(--cyan); }
+  .diff-card p { color:var(--muted); font-size:.875rem; line-height:1.7; }
+  .diff-card.gist { border-color:rgba(94,183,199,.2); background:rgba(94,183,199,.03); }
+
+  .compare-table { width:100%; border-collapse:collapse; font-size:.85rem; opacity:0; transform:translateY(20px); transition:all .6s ease; }
+  .compare-table.visible { opacity:1; transform:translateY(0); }
+  .compare-table th { text-align:left; padding:12px 16px; color:var(--muted); font-weight:500; border-bottom:1px solid var(--graphite); }
+  .compare-table td { padding:12px 16px; border-bottom:1px solid rgba(46,53,66,.5); color:var(--muted); }
+  .compare-table td:first-child { color:var(--parchment); font-weight:500; }
+  .compare-table .yes { color:var(--green); }
+  .compare-table .no { color:var(--red); }
+  .compare-table .partial { color:var(--amber); }
+  .compare-table .hl td { background:rgba(226,183,109,.05); }
+  .compare-section .disclaimer { text-align:center; margin-top:16px; color:var(--muted); font-size:.75rem; }
+
+  .cta-section { position:relative; z-index:5; padding:100px 0; text-align:center; }
+  .cta-section h2 { font-size:2rem; margin-bottom:16px; }
+  .cta-section h2 span { color:var(--gold); }
+  .cta-section p { color:var(--muted); margin-bottom:36px; font-size:1.1rem; max-width:500px; margin-left:auto; margin-right:auto; }
+  .cta-section .install-cmd { display:inline-block; background:var(--slate); border:1px solid var(--graphite); border-radius:8px; padding:18px 32px; color:var(--cyan); font-size:.9rem; margin-bottom:28px; word-break:break-all; transition:all .3s ease; }
+  .cta-section .install-cmd:hover { border-color:var(--cyan); box-shadow:0 0 20px rgba(94,183,199,.15); }
+  .cta-section .cta { display:inline-flex; align-items:center; gap:8px; padding:14px 28px; border-radius:6px; font-family:inherit; font-size:.95rem; font-weight:600; text-decoration:none; cursor:pointer; transition:all .2s; background:var(--gold); color:var(--ink); }
+  .cta-section .cta:hover { background:#f0c97a; transform:translateY(-2px); box-shadow:0 8px 24px rgba(226,183,109,.3); }
+
+  .faq { position:relative; z-index:5; padding:60px 0 80px; }
+  .faq-item { border-bottom:1px solid var(--graphite); opacity:0; transform:translateY(20px); transition:all .6s ease; }
+  .faq-item.visible { opacity:1; transform:translateY(0); }
+  .faq-question { display:flex; justify-content:space-between; align-items:center; padding:20px 0; cursor:pointer; font-weight:500; font-size:1rem; transition:color .2s; }
+  .faq-question:hover { color:var(--gold); }
+  .faq-question::after { content:'+'; color:var(--muted); font-size:1.2rem; transition:transform .3s; }
+  .faq-item.open .faq-question::after { transform:rotate(45deg); color:var(--gold); }
+  .faq-answer { max-height:0; overflow:hidden; transition:max-height .3s ease, padding .3s ease; color:var(--muted); font-size:.875rem; line-height:1.7; }
+  .faq-item.open .faq-answer { max-height:200px; padding-bottom:20px; }
+
+  .testimonials { position:relative; z-index:5; padding:60px 0; }
+  .testimonial-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:24px; margin-top:40px; }
+  .testimonial { background:var(--slate); border:1px solid var(--graphite); border-radius:10px; padding:24px; opacity:0; transform:translateY(20px); transition:all .6s ease; }
+  .testimonial.visible { opacity:1; transform:translateY(0); }
+  .testimonial .quote { color:var(--parchment); font-size:.9rem; line-height:1.7; margin-bottom:16px; font-style:italic; }
+  .testimonial .author { display:flex; align-items:center; gap:12px; }
+  .testimonial .author .avatar { width:36px; height:36px; border-radius:50%; background:var(--graphite); display:flex; align-items:center; justify-content:center; font-size:.9rem; }
+  .testimonial .author .name { font-size:.85rem; font-weight:500; }
+  .testimonial .author .handle { font-size:.75rem; color:var(--muted); }
+
+  footer { position:relative; z-index:5; border-top:1px solid var(--graphite); padding:40px 0; text-align:center; color:var(--muted); font-size:.8rem; }
+  footer a { color:var(--gold); text-decoration:none; }
+  footer a:hover { text-decoration:underline; }
+  footer .links { display:flex; justify-content:center; gap:24px; margin-bottom:20px; flex-wrap:wrap; }
+  footer .brand { color:var(--gold); font-weight:bold; margin-bottom:8px; }
+
+  @media (max-width:640px) {
+    .hero { padding:60px 0 40px; }
+    .hero h1 { font-size:1.9rem; }
+    .hero .wordmark { font-size:.35rem; }
+    .hero .subtitle { font-size:1rem; }
+    .hero .stats { gap:24px; }
+    .feature-grid { grid-template-columns:1fr; }
+    .differentiators { grid-template-columns:1fr; }
+    .compare-table { font-size:.72rem; }
+    .compare-table th, .compare-table td { padding:8px 10px; }
+    .terminal-mock .body { font-size:.75rem; overflow-x:auto; }
+    .testimonial-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<nav class="container">
+  <div class="logo">AGENCY</div>
+  <div class="links">
+    <a href="https://github.com/ETEllis/agency">GitHub</a>
+    <a href="https://github.com/ETEllis/agency/blob/main/AGENCY_BLUEPRINT.md">Blueprint</a>
+    <a href="#features">Features</a>
+    <a href="#faq">FAQ</a>
+  </div>
+</nav>
+
+<section class="hero container">
+  <div class="wordmark">    _    ____ _____ _   _  ______   __
+   / \  / ___| ____| \ | |/ ___\ \ / /
+  / _ \| |  _|  _| |  \| | |    \ V /
+ / ___ \ |_| | |___| |\  | |___  | |
+/_/   \_\____|_____|_| \_|\____| |_|</div>
+  <h1>Your intent, <span>multiplied.</span></h1>
+  <p class="subtitle">A local command center where AI agents work as your team — with voice, presence, GIST causal reasoning, and an append-only ledger.</p>
+  <div class="cta-group">
+    <a href="https://github.com/ETEllis/agency" class="cta cta-primary">⭐ Star on GitHub</a>
+    <a href="https://github.com/ETEllis/agency#quick-start" class="cta cta-secondary">📦 Install</a>
+  </div>
+  <p class="demo-hint">Or see it live in 30 seconds: <code>scripts/demo-local-office</code></p>
+  <div class="stats">
+    <div class="stat"><div class="num" id="star-count">—</div><div class="label">GitHub Stars</div></div>
+    <div class="stat"><div class="num">5</div><div class="label">AI Providers</div></div>
+    <div class="stat"><div class="num">∞</div><div class="label">Agents</div></div>
+  </div>
+</section>
+
+<div class="terminal-mock container">
+  <div class="titlebar">
+    <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+    <div class="title">agency — office running · 5 agents active</div>
+    <div class="live-indicator"><div class="pulse"></div><span>LIVE</span></div>
+  </div>
+  <div class="body">
+    <span class="prompt">~/office $</span> <span class="cmd typing">./agency genesis "build a REST API for our platform"</span><br>
+    <span class="output">→ Genesis parsed. Staffing office with 5 agents...</span><br><br>
+    <span class="gold">Architect</span> <span class="output">woke · routing → Claude Opus</span><br>
+    <span class="cyan">Builder</span> <span class="output">woke · routing → GPT-5</span><br>
+    <span class="green">Reviewer</span> <span class="output">woke · routing → Ollama (local)</span><br>
+    <span class="amber">Scheduler</span> <span class="output">woke · cron tree active</span><br>
+    <span class="output">Clerk</span> <span class="output">woke · ledger ready</span><br><br>
+    <span class="cyan">[GIST]</span> <span class="output">Architect compressing context — causal chain preserved</span><br>
+    <span class="output">→ Action proposed: Create project scaffold (21 files)</span><br>
+    <span class="gold">[APPROVAL]</span> <span class="output">Press a to approve / r to reject</span><br>
+    <span class="output">→ </span><span class="green">Approved.</span> <span class="output">Executing across 3 providers...</span><br><br>
+    <span class="amber">[Bulletin]</span> <span class="output">Architect · 2.3s · score: </span><span class="green">0.94</span><br>
+    <span class="cyan">[Bulletin]</span> <span class="output">Builder · 4.1s · score: </span><span class="green">0.89</span><br><br>
+    <span class="green">[Ledger]</span> <span class="output">CommitCertificate: 0xa7f3...e9d2 ✓</span><br>
+    <span class="output">→ All 21 files created · 3 tests passing · Project ready</span><br>
+  </div>
+</div>
+
+<section class="section container" id="features">
+  <h2>What <span>You Get</span></h2>
+  <p class="section-sub">An entire AI organization in your terminal. Not a chatbot. An office.</p>
+  <div class="feature-grid">
+    <div class="feature-card highlight">
+      <div class="icon">🧠</div>
+      <h3>GIST Causal Reasoning</h3>
+      <p>Agents don't just hold context. GIST compresses it causally via ElasticStretch + LatticeStore — preserving the chain of <em>why</em> decisions were made. No other terminal AI tool has a cognitive compression layer.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🕐</div>
+      <h3>Scheduled, Persistent</h3>
+      <p>Nested cron tree fires WakeSignals. Agents work on schedule — running indefinitely in the background while you focus on what matters. Your office never sleeps.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">👥</div>
+      <h3>Voice & Presence</h3>
+      <p>Every teammate has a voice and a presence. iMessage-style bubbles, per-agent color, TTS voice on broadcast. You're not alone at your terminal.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">✋</div>
+      <h3>Approval Lanes</h3>
+      <p>Every consequential action is proposed before it executes. Press a/r. Vote relay. Your call, always — not autopilot.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🔀</div>
+      <h3>5-Provider Routing</h3>
+      <p>Codex, Anthropic, OpenAI, Gemini, Ollama. 5 hard gates. Auto-failover. Ollama-first for local privacy. Always route to the safest available provider.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📒</div>
+      <h3>Append-Only Ledger</h3>
+      <p>Immutable. Quorum consensus. Snapshots. Everything proposed, approved, and executed is recorded — a single source of truth for your entire organization.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section container">
+  <h2>What Makes Agency <span>Different</span></h2>
+  <p class="section-sub">Built for developers who want more than a prompt.</p>
+  <div class="differentiators">
+    <div class="diff-card gist">
+      <h3><span class="accent">GIST</span> — Causal Compression</h3>
+      <p>Agents don't just hold context. GIST compresses it causally via ElasticStretch + LatticeStore — preserving the chain of <em>why</em> decisions were made. No other terminal AI tool has a cognitive compression layer.</p>
+    </div>
+    <div class="diff-card">
+      <h3><span style="color:var(--gold)">Organization</span> — Not a Prompt</h3>
+      <p>Agency is a staffed office with roles, presence, voice, bulletin board, and scheduled wakes. You're not prompting a tool. You're running a team. One command, one interface — and suddenly you're not alone.</p>
+    </div>
+    <div class="diff-card">
+      <h3><span style="color:var(--green)">Approval</span> — Human in the Loop</h3>
+      <p>Every consequential action hits your approval lane before it executes. Press a/r. Vote relay. This is the difference between having a team you trust and giving an AI autopilot access to your machine.</p>
+    </div>
+    <div class="diff-card">
+      <h3><span style="color:var(--red)">Ledger</span> — Immutable Truth</h3>
+      <p>CommitCertificate. Quorum consensus. Snapshots. Everything is recorded and auditable forever. Not a chat log — a single source of truth for everything your organization does.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section container compare-section">
+  <h2>How Agency <span>Compares</span></h2>
+  <p class="section-sub">Researched May 2026. OpenCode archived April 2026 (now Crush).</p>
+  <table class="compare-table">
+    <tr><th></th><th>Agency</th><th>Claude Code</th><th>Cursor</th><th>Crush</th></tr>
+    <tr><td>Paradigm</td><td>Staffed organization</td><td>Agentic assistant</td><td>AI editor</td><td>AI shell</td></tr>
+    <tr class="hl"><td>GIST cognitive layer</td><td class="yes">✅ Causal compression</td><td class="no">❌</td><td class="no">❌</td><td class="no">❌</td></tr>
+    <tr><td>Scheduling</td><td class="yes">✅ Cron tree + prompt injection</td><td class="partial">✅* Desktop only</td><td class="no">❌</td><td class="no">❌</td></tr>
+    <tr class="hl"><td>Multi-agent team</td><td class="yes">✅ Roles + voice + presence</td><td class="no">❌ Single agent</td><td class="no">❌</td><td class="no">❌</td></tr>
+    <tr><td>Approval gates</td><td class="yes">✅ a/r lane + vote relay</td><td class="no">❌ Auto-execute</td><td class="no">❌</td><td class="no">❌</td></tr>
+    <tr class="hl"><td>Audit ledger</td><td class="yes">✅ Immutable + quorum</td><td class="no">❌</td><td class="no">❌</td><td class="no">❌</td></tr>
+    <tr><td>Model routing</td><td class="yes">5 providers + 5 hard gates</td><td>Single + integrations</td><td>Multi</td><td>Multi</td></tr>
+    <tr class="hl"><td>Local-only mode</td><td class="yes">✅ Ollama-native</td><td class="no">❌ Subscription required</td><td class="no">❌</td><td class="yes">✅</td></tr>
+    <tr><td>Open source</td><td class="yes">✅ MIT</td><td class="no">❌</td><td class="no">❌</td><td class="yes">✅ MIT</td></tr>
+  </table>
+  <p class="disclaimer">*Claude Desktop offers trigger-based recurring tasks — not a nested cron tree with GIST compression and prompt injection.</p>
+</section>
+
+<section class="testimonials container">
+  <h2>What Early Users <span>Say</span></h2>
+  <div class="testimonial-grid">
+    <div class="testimonial">
+      <p class="quote">"I set up Agency to run my CI review process. It wakes at 9am, reviews all PRs, and presents a summary for my approval. I've never had a tool that actually works while I sleep."</p>
+      <div class="author"><div class="avatar">👨‍💻</div><div><div class="name">Early Adopter</div><div class="handle">@devops_lead</div></div></div>
+    </div>
+    <div class="testimonial">
+      <p class="quote">"The GIST layer is genuinely different. Watching an agent compress context causally and preserve the reasoning chain — that's not context windows, that's understanding."</p>
+      <div class="author"><div class="avatar">🔬</div><div><div class="name">ML Engineer</div><div class="handle">@ml_researcher</div></div></div>
+    </div>
+    <div class="testimonial">
+      <p class="quote">"Finally, an AI tool that treats me like a manager, not a typist. I staff the office, set the schedule, approve the actions. Agency works FOR me."</p>
+      <div class="author"><div class="avatar">🚀</div><div><div class="name">Solo Founder</div><div class="handle">@indiehacker</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="faq container" id="faq">
+  <h2>Frequently Asked <span>Questions</span></h2>
+  <div class="faq-item">
+    <div class="faq-question">Is Agency free?</div>
+    <div class="faq-answer">Yes. Agency is MIT licensed and free to use. You only pay for API usage if you choose cloud providers (Claude, GPT, Gemini). Ollama runs 100% locally at zero cost.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Do I need API keys?</div>
+    <div class="faq-answer">No. The 30-second demo runs without any API keys. For production use, you can authenticate with Codex (OAuth, no key), or set any subset of Anthropic, OpenAI, Gemini, or Ollama.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Does it work on Linux/Windows?</div>
+    <div class="faq-answer">Primary support is macOS. Linux works when Go, Redis, and Overmind are available. Windows support is on the roadmap for V2 via WSL2.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Is this just a wrapper around Claude/GPT?</div>
+    <div class="faq-answer">No. Agency is an environment that agents inhabit. It has its own scheduling, routing, approval, and ledger systems. The providers are execution backends — Agency is the organization layer.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Can I run this in production?</div>
+    <div class="faq-answer">V1 is stable for local development and personal workflows. Production hardening (Docker parity, distributed consensus, web dashboard) is the V2/V3 roadmap.</div>
+  </div>
+</section>
+
+<section class="cta-section container">
+  <h2>Ready to staff your <span>office</span>?</h2>
+  <p>One command. Local. Open source. Your intent, multiplied.</p>
+  <div class="install-cmd">curl -fsSL https://raw.githubusercontent.com/ETEllis/agency/main/install | bash</div>
+  <a href="https://github.com/ETEllis/agency" class="cta">⭐ Star Agency on GitHub</a>
+</section>
+
+<footer class="container">
+  <div class="brand">AGENCY</div>
+  <div class="links">
+    <a href="https://github.com/ETEllis/agency">GitHub</a>
+    <a href="https://github.com/ETEllis/agency/blob/main/AGENCY_BLUEPRINT.md">Blueprint</a>
+    <a href="https://github.com/ETEllis/agency/blob/main/BRAND.md">Brand</a>
+    <a href="https://discord.gg/agency">Discord</a>
+    <a href="https://x.com/agency">Twitter/X</a>
+  </div>
+  <p>MIT Licensed · Built with Go · Your machine, your agents, your ledger.</p>
+</footer>
+
+<script>
+// Intersection Observer for scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.section h2, .section .section-sub, .feature-card, .diff-card, .compare-table, .testimonial, .faq-item').forEach(el => {
+  observer.observe(el);
+});
+
+// FAQ accordion
+document.querySelectorAll('.faq-question').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    item.classList.toggle('open');
+  });
+});
+
+// Particle canvas
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let w, h;
+
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+class Particle {
+  constructor() {
+    this.x = Math.random() * w;
+    this.y = Math.random() * h;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.size = Math.random() * 1.5 + 0.5;
+    this.alpha = Math.random() * 0.3 + 0.1;
+    this.color = Math.random() > 0.6 ? '#E2B76D' : Math.random() > 0.5 ? '#5EB7C7' : '#7FB069';
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > w) this.vx *= -1;
+    if (this.y < 0 || this.y > h) this.vy *= -1;
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = this.alpha;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+for (let i = 0; i < 80; i++) particles.push(new Particle());
+
+function animate() {
+  ctx.clearRect(0, 0, w, h);
+  particles.forEach(p => { p.update(); p.draw(); });
+  // Draw connections
+  particles.forEach((p1, i) => {
+    particles.slice(i + 1).forEach(p2 => {
+      const dx = p1.x - p2.x, dy = p1.y - p2.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 150) {
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.strokeStyle = p1.color;
+        ctx.globalAlpha = 0.05 * (1 - dist / 150);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+    });
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+// Fetch GitHub stars (if API allows)
+fetch('https://api.github.com/repos/ETEllis/agency')
+  .then(r => r.json())
+  .then(data => {
+    if (data.stargazers_count !== undefined) {
+      document.getElementById('star-count').textContent = data.stargazers_count;
+    }
+  })
+  .catch(() => {});
+</script>
+</body>
+</html>

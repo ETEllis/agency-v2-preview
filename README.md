@@ -1,0 +1,487 @@
+# Agency
+
+**Not a chatbot. An office.**
+
+```txt
+    _    ____ _____ _   _  ______   __
+   / \  / ___| ____| \ | |/ ___\ \ / /
+  / _ \| |  _|  _| |  \| | |    \ V /
+ / ___ \ |_| | |___| |\  | |___  | |
+/_/   \_\____|_____|_| \_|\____| |_|
+```
+
+[![Go Version](https://img.shields.io/badge/Go-1.24+-00ADD8?style=flat&logo=go)](https://go.dev)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![V1 Status](https://img.shields.io/badge/release-V1%20shipped-E2B76D)](RELEASE_CHECKLIST.md)
+[![Release Proof](https://img.shields.io/badge/release%20proof-verified-7FB069)](RELEASE_CHECKLIST.md)
+
+> **⚡ See it in 30 seconds — no API keys needed:**
+>
+> ```bash
+> scripts/demo-local-office
+> ```
+>
+> Watch agents wake, route work across providers, propose actions for your approval, and write everything to an immutable ledger. All in your terminal. All local.
+
+---
+
+Agency is a local command center where AI agents work as an organization — not a chatbot tab you type into.
+
+Staff a configurable team with roles and schedules. They wake, route work through the safest available provider, propose actions for your approval, and record everything to an append-only ledger you can audit. One-off projects, long-running operations, app builds, business workflows, life admin: one command line, one interface, and suddenly you are not alone.
+
+It is built for developers who want more than a prompt: a persistent office that works while you sleep.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ETEllis/agency/main/install | bash
+```
+
+See the local office breathe in under a minute:
+
+```bash
+scripts/demo-local-office
+```
+
+### What You Get
+
+- A terminal command center for a staffed AI office.
+- Local Redis + Overmind runtime with office, scheduler, actor, runtime, and IPC daemons.
+- Provider routing across Codex, Anthropic, OpenAI, Gemini, and Ollama.
+- Human approval lanes for proposed actions.
+- A bulletin board and append-only ledger for auditability.
+- A 30-second demo loop that shows wake, routing, bulletin, approval, and ledger transcript flow without API keys.
+- A clear V1 terminal release with voice, desktop, Docker, and remote-client work staged as the next product layers.
+
+### Why Agency
+
+Agency treats autonomous work as an organization, not a prompt. Schedules create wake signals, agents compress context into GIST state, model routing chooses the safest available provider, approvals gate consequential action, and the ledger preserves what happened. The result is a local command center that can become a daily working surface today and a larger orchestration substrate tomorrow.
+
+---
+
+## Why I Built This
+
+Every AI tool today is a chat window with a model behind it. You prompt. It responds. You prompt again. It's a typewriter with a smart dictionary.
+
+I wanted something different. I wanted an AI that could run while I slept — waking on schedules, routing work to the right model, proposing actions for my approval, and writing everything to a ledger I could audit later. Not a tool I talk to. An office I run.
+
+So I built Agency.
+
+It is not a layer on top of Claude or GPT. It is an environment. Agents inhabit it. Schedules wake them. Approvals gate them. A ledger remembers everything they do. And it all runs on your machine.
+
+### How Agency Compares
+
+|  | Agency | Claude Code | Cursor | Crush |
+|--|--------|-------------|--------|-------|
+| **Paradigm** | Staffed organization | Agentic assistant | AI editor | AI shell |
+| **GIST cognitive layer** | ✅ Causal compression + elastic stretch | ❌ | ❌ | ❌ |
+| **Scheduling** | ✅ Nested cron tree + prompt injection | ✅\* Recurring (Desktop only) | ❌ | ❌ |
+| **Multi-agent team** | ✅ Roles, voice, presence | ❌ Single agent | ❌ | ❌ |
+| **Approval gates** | ✅ a/r lane + vote relay | ❌ Auto-execute | ❌ | ❌ |
+| **Append-only ledger** | ✅ Immutable, quorum, snapshots | ❌ | ❌ | ❌ |
+| **Model routing** | ✅ 5 providers + 5 hard gates | Single + integrations | Multi | Multi |
+| **Local-first** | ✅ Ollama-native, no cloud | ❌ Subscription required | ❌ | ✅ |
+| **Open source** | ✅ MIT | ❌ | ❌ | ✅ MIT |
+
+> \*Claude Desktop's recurring tasks are trigger-based, not a nested cron tree with GIST compression. Claude Code and OpenCode (archived April 2026, now Crush) were researched as of May 2026.
+
+### What Makes Agency Different
+
+**GIST.** Causal compression + ElasticStretch + LatticeStore. Agents don't just hold context — they compress it causally, preserving *what* happened and *why*. No other terminal AI tool has anything like this.
+
+**Organization, not a prompt.** Agency is a staffed office — roles, presence, voice, bulletin board, scheduled wakes. You're not prompting a tool. You're running a team.
+
+**Approval lanes.** Every consequential action is proposed before it executes. Press `a` to approve, `r` to reject. Vote relay. This is the difference between autopilot and having a team you trust.
+
+**The Ledger.** Immutable, append-only, quorum consensus, snapshots. Everything is recorded and auditable. Not a chat log — a single source of truth.
+
+### Who Agency Is For
+
+Agency is for developers who:
+
+- Want AI that works while they sleep, not just while they type
+- Are tired of managing 4 different AI subscriptions and API keys
+- Want a local-first, auditable, open-source alternative to closed AI tools
+- Believe AI collaboration should look like an organization, not a chat window
+- Want to approve consequential actions before they execute
+- Are building projects, businesses, or workflows that span days, not minutes
+
+If you just want smarter autocomplete, use Cursor. If you want an organization, use Agency.
+
+---
+
+## V1 Release
+
+Agency V1 is the terminal-first local office: CLI/TUI, Redis + Overmind runtime,
+agent daemons, provider routing, approvals, bulletin updates, ledger state, IPC,
+one-command install, and release proof. It is the public starting point, not a
+demo branch.
+
+### V1 Status
+
+| Area | Status |
+|------|--------|
+| Terminal CLI/TUI | V1 shipped |
+| Local runtime | V1 shipped: Redis + Overmind + office/runtime/scheduler/actor/IPC daemons |
+| Provider routing | V1 shipped: Codex, Anthropic, OpenAI, Gemini, Ollama |
+| Approvals, bulletin, ledger | V1 shipped |
+| Installer and release proof | V1 shipped and verified by `scripts/live-release-proof` |
+| Voice | V1 optional fallback; V2 product-quality voice layer |
+| Docker Compose | V1 optional packaging; V2 hardening/parity path |
+| macOS desktop | V2 companion app |
+| Remote clients / web dashboard | V3 expansion path |
+
+For release evidence, rerun the live local-process gates from a normal Terminal
+session to create a fresh proof bundle:
+
+```bash
+scripts/live-release-proof --log-dir .tmp/release-proof
+```
+
+For targeted reruns, use `scripts/release-smoke --live` or
+`scripts/release-smoke --with-overmind --skip-static`.
+
+The tracked release audit is [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
+
+For a quick guided proof, read [docs/DEMO.md](docs/DEMO.md) or run:
+
+```bash
+scripts/demo-local-office
+```
+
+### Brand
+
+Agency uses a command-center palette: Ledger Ink `#101114`, Signal Gold `#E2B76D`, Relay Cyan `#5EB7C7`, Ledger Green `#7FB069`, and Parchment text `#E8E3D6`. The full public brand note is [BRAND.md](BRAND.md).
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  USER LAYER                                              │
+│  TUI iMessage bubbles · Optional Voice · Approval        │
+│  lane · Bulletin board · Genesis wizard                  │
+└────────────────────────┬────────────────────────────────┘
+                         │
+┌────────────────────────▼────────────────────────────────┐
+│  DETERMINISTIC LAYER  (Nested Temporal Cron Tree)        │
+│  ScheduleNode tree · prompt_injection per node           │
+│  Fires enriched WakeSignals into reactive layer          │
+└────────────────────────┬────────────────────────────────┘
+                         │ enriched WakeSignal
+┌────────────────────────▼────────────────────────────────┐
+│  REACTIVE LAYER  (Stateful Agent Runtime)                │
+│  Redis event bus · Actor daemons · Ledger · Consensus    │
+└────────────────────────┬────────────────────────────────┘
+                         │
+┌────────────────────────▼────────────────────────────────┐
+│  GIST COGNITIVE LAYER  (per-agent)                       │
+│  Causal compression · ElasticStretch · Lattice state     │
+│  Outputs: GISTVerdict + execution_intent                 │
+└────────────────────────┬────────────────────────────────┘
+                         │ ActionIntent
+┌────────────────────────▼────────────────────────────────┐
+│  MODEL ROUTING LAYER                                     │
+│  ModelRouter · CredentialBroker · 5 provider adapters    │
+│  5 hard gates (capability/auth/privacy/tools/budget)     │
+│  Ollama-first soft scoring                               │
+└────────────────────────┬────────────────────────────────┘
+                         │ Result
+┌────────────────────────▼────────────────────────────────┐
+│  LEDGER  (append-only, single source of truth)           │
+│  CommitCertificate · Quorum consensus · Snapshots        │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Full request chain:**
+```
+WakeSignal → GIST/ReasoningCore → ActionIntent → ModelRouter → ProviderAdapter → Result → Ledger
+```
+
+### Completed Stages
+
+| Stage | What shipped |
+|-------|-------------|
+| **1 — Live Agent Foundation** | DB poll scheduler, broadcast→TUI pipeline, env config, optional voice via Kokoro or macOS `say` fallback |
+| **2 — GIST Cognitive Layer** | `GISTAgentCore`, causal compression, `ElasticStretch`, `LatticeStore`, per-wake lattice persistence |
+| **3 — Model Routing Layer** | `ModelRouter` (5 hard gates + soft scoring), `CredentialBroker`, Codex/Anthropic/Ollama/OpenAI/Gemini adapters, routing audit log |
+| **4 — Core TUI Experience** | iMessage-style bubbles (per-actor color + avatar + timestamp), TTS voice on broadcast, `ApprovalCmp` panel (a/r keys, auto right-rail), approval channel + vote relay |
+| **5 — Nested Temporal Orchestration** | `ScheduleNode` tree with `prompt_injection`, `NestedScheduler`, `PerformanceRecord`, bulletin timeline (directive→output→score), daemon wired: directive → 1.5-weight GIST atom + performance publish |
+
+---
+
+## Quick Start
+
+### One-command install
+
+On macOS, this installs or verifies Go, Redis, and Overmind through Homebrew,
+clones Agency, builds the CLI and daemons, and adds `agency` to your shell PATH:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ETEllis/agency/main/install | bash
+```
+
+For a non-interactive build-only install:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ETEllis/agency/main/install | bash -s -- --yes --skip-provider --no-launch
+```
+
+The installer uses `~/.agency` by default. Override with `AGENCY_INSTALL_DIR`.
+Linux is supported when `git`, `go`, `redis-server`, and `overmind` are already
+available, or when Homebrew/Linuxbrew is installed.
+
+### Repository Contents
+
+| Path | What it is |
+|------|------------|
+| `cmd/` | CLI commands, runtime commands, and schema generation |
+| `internal/agency/` | Core office runtime: schedules, agents, bus, routing, ledger, IPC |
+| `internal/tui/` | Terminal command-center UI, splash, approval lane, and themes |
+| `scripts/` | Setup, daemon build, smoke tests, live proof, and verifier scripts |
+| `docs/DEMO.md` | Guided local demo path for cold visitors |
+| `Procfile` | Local Redis + office + runtime + scheduler + IPC process graph |
+| `Dockerfile.agency`, `docker-compose.agency.yml` | Optional packaging path, not required for the default local install |
+| `AGENCY_BLUEPRINT.md` | Architecture reference |
+| `RELEASE_CHECKLIST.md` | Public release gates and evidence trail |
+| `CONTRIBUTING.md`, `SECURITY.md` | Public contribution and vulnerability reporting guidance |
+
+### Prerequisites
+
+- Go 1.24+
+- Redis (for the local multi-process office runtime)
+- Overmind (for running the local `Procfile`)
+- Python 3.9+ with `kokoro-onnx` only if you want higher-quality local voice; macOS `say` is the no-extra-dependency fallback
+- Codex CLI authenticated with `codex login`, an API key for at least one hosted provider (Anthropic, OpenAI, Gemini), **or** Ollama running locally
+- Docker is not required for the default terminal release path
+
+### Voice In V1
+
+Voice is intentionally optional in V1. Agency can run completely without a
+custom voice model, and on macOS it can use the built-in `say` command as the
+lightweight fallback. Install Kokoro only when you want better local TTS:
+
+```bash
+scripts/install-voice
+```
+
+### Boot the office
+
+```bash
+# Build and configure without auto-launching the TUI
+scripts/setup --no-launch --skip-provider
+
+# Build all daemons
+scripts/build-daemons
+
+# Connect at least one provider
+codex login                       # ChatGPT OAuth, no API key
+# or:
+export ANTHROPIC_API_KEY=sk-...   # OPENAI_API_KEY, GEMINI_API_KEY, OLLAMA_API_BASE also work
+
+# Start the local office runtime (Redis + daemons + IPC)
+overmind start
+```
+
+### Release smoke
+
+Run static/build gates anywhere:
+
+```bash
+scripts/release-smoke
+```
+
+Run live Redis/IPC proof from a normal Terminal session:
+
+```bash
+scripts/release-smoke --live
+```
+
+Run the full local-process proof:
+
+```bash
+scripts/release-smoke --with-overmind
+```
+
+Run the full terminal release proof with durable logs and automatic verification:
+
+```bash
+scripts/live-release-proof
+```
+
+To choose the evidence directory:
+
+```bash
+scripts/live-release-proof --log-dir .tmp/release-proof
+```
+
+The proof directory includes `manifest.txt`, `static.log`,
+`live-redis-ipc.log`, and `live-overmind.log`.
+
+Re-check a completed proof directory:
+
+```bash
+scripts/verify-release-proof .tmp/release-proof
+```
+
+### TUI only (no daemons)
+
+```bash
+go build -o agency .
+./agency
+```
+
+### Key commands inside the TUI
+
+```
+/agency genesis   — natural-language intent → structured org config
+/agency bootstrap — boot a staffed office from a constitution
+/agency status    — inspect running office, actors, schedules
+/agency stop      — graceful shutdown
+```
+
+### Approval lane
+
+When agents propose actions, the approval panel appears in the right rail automatically. Press `a` to approve, `r` to reject, `↑↓` to navigate.
+
+### Bulletin board
+
+Performance records (directive→output→score) stream into the messages viewport as agents complete inference cycles. Color-coded score badges shift green→yellow→red.
+
+---
+
+## Configuration
+
+Primary config: `~/.agency.json` or `.agency.json` in your project root.
+
+```jsonc
+{
+  "agency": {
+    "productName": "Agency",
+    "office": {
+      "mode": "staffed",
+      "sharedWorkplace": ".agency/workplace",
+      "autoBoot": true
+    },
+    "redis": {
+      "enabled": true,
+      "address": "localhost:6379"
+    },
+    "schedules": {
+      "defaultCadence": "@every 5m",
+      "timezone": "America/New_York"
+    },
+    "currentConstitution": "coding-office"
+  }
+}
+```
+
+Legacy `.teamcode.json` / `.opencode.json` config files are still read as fallbacks for existing installs.
+
+---
+
+## Architecture — Key Files
+
+| File | Role |
+|------|------|
+| `internal/agency/daemon_actor.go` | Actor main loop: GIST -> routing -> proposals -> ledger -> bus |
+| `internal/agency/types.go` | All domain types including `ScheduleNode`, `ActionProposal`, `WakeSignal` |
+| `internal/agency/gist_core.go` | GIST subprocess manager + elastic stretch |
+| `internal/agency/nested_scheduler.go` | Cron tree with prompt injection |
+| `internal/agency/routing.go` | `ModelRouter`, `CredentialBroker`, 5-gate scoring |
+| `internal/agency/performance.go` | `PerformanceRecord`, `BulletinChannel`, `PublishPerformance` |
+| `internal/agency/runtime.go` | `RuntimeManager`, channel helpers |
+| `internal/tui/components/chat/approval.go` | Approval panel component |
+| `internal/tui/components/chat/bulletin.go` | Bulletin timeline renderer |
+| `internal/app/agency.go` | `AgencyService` — subscriptions, votes, genesis |
+| `internal/db/migrations/` | 6 migrations (schema + agency runtime) |
+| `AGENCY_BLUEPRINT.md` | Full architecture reference (canonical) |
+
+---
+
+## Roadmap
+
+### V2 — Companion Surfaces
+
+- Product-quality voice: stronger local TTS/STT defaults, voice selection, and better first-run checks.
+- macOS desktop companion: native SwiftUI office view with bubbles, bulletin board, approvals, and agent status.
+- IPC hardening: richer local-client protocol for desktop and CLI companion tools.
+- Docker parity: optional Compose packaging hardened for users who prefer containerized local runtime.
+
+### V3 — Networked Office
+
+- WebSocket transport for remote event streams.
+- Web dashboard and mobile companion views.
+- Multi-machine office coordination.
+- Deeper policy, credential, and permission surfaces for long-running organizations.
+
+---
+
+## Community
+
+- **[Discord](https://discord.gg/agency)** — Live help, office showcases, office-hours
+- **[GitHub Discussions](https://github.com/ETEllis/agency/discussions)** — Feature requests, ideas, Q&A
+- **[Twitter](https://twitter.com/agency)** — Updates, tips, community highlights
+
+---
+
+## Contributing
+
+Agency is early but intentionally public. Good first contributions are provider adapters, release-smoke hardening, TUI polish, docs, and runtime tests. Before opening changes, run:
+
+```bash
+go test ./...
+scripts/release-smoke
+```
+
+For changes touching Redis, Overmind, IPC, or daemon orchestration, also run:
+
+```bash
+scripts/live-release-proof --log-dir .tmp/release-proof
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the public contribution path.
+
+## Security
+
+Do not commit `.env`, `.codex`, local proof logs, generated binaries, or agent scratch state. The repo ignores those paths by default. Codex execution uses a read-only sandbox unless `AGENCY_CODEX_UNSANDBOXED=true` is explicitly set.
+
+See [SECURITY.md](SECURITY.md) for vulnerability reporting.
+
+---
+
+## Providers
+
+Agency routes to whichever provider passes its gates. The easiest hosted path is Codex CLI with ChatGPT OAuth:
+
+```bash
+npm install -g @openai/codex
+codex login
+```
+
+You can also set any subset of these:
+
+```bash
+export ANTHROPIC_API_KEY=...
+export OPENAI_API_KEY=...
+export GEMINI_API_KEY=...
+export OLLAMA_API_BASE=http://localhost:11434   # Ollama preferred first (local-first)
+```
+
+The setup script exposes the same provider choices interactively:
+
+```bash
+scripts/setup
+```
+
+Codex execution uses a read-only sandbox by default. The unsafe unsandboxed developer mode is opt-in only via `AGENCY_CODEX_UNSANDBOXED=true`.
+
+---
+
+## License And Attribution
+
+MIT
+
+Agency preserves upstream MIT attribution from the OpenCode / TeamCode lineage.
+See [NOTICE.md](NOTICE.md).
+
+The Agency terminal runtime is and will remain MIT open source. A hosted platform
+with natural voice, desktop, mobile, cloud sync, and team collaboration is in
+development — the terminal is the foundation, not the ceiling.
